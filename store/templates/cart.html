@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load currency %}
+{% load cart %}
+{% block content %}
+
+   <div class="container">
+       <div class="border-rounded p-4 m-4">
+           <p class="display-4 pl-4 ml-4">Your Cart</p>
+           <hr>
+           <table class="table">
+  <thead>
+    <tr>
+      <th >Sl.No.</th>
+      <th>Image</th>
+      <th >Item Name</th>
+      <th >Price</th>
+      <th >Quantity</th>
+        <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for item in cart %}
+    <tr>
+      <th>{{ forloop.counter0|count }}</th>
+      <th><img style="height:60px" class="rounded-circle" src="{{item.image.url}}" alt="{{item.name}} image"></th>
+      <td>{{item.name}}</td>
+      <td>{{item.price|currency}}</td>
+      <td>{{item|cart_quantity:request.session.cart}}</td>
+        <td>{{item|price_total:request.session.cart|currency}}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+               <tfoot>
+               <tr>
+                   <th colspan="4"></th>
+                   <th class="text-center">Total</th>
+                   <th>{{cart|price_sum:request.session.cart|currency}}</th>
+               </tr>
+               </tfoot>
+</table>
+           <div class="m-3 p-3">
+             <form action="/details/" method="POST">
+              {% csrf_token %}
+               <input type="submit" value="Check Out" class="btn btn-primary" data-bs-toggle="modal"
+                  class="btn btn-outline-info border rounded col-lg-3 float-right">
+              </form>
+           </div>
+       </div>
+   </div>
+{% endblock %}
